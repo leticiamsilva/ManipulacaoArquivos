@@ -1,15 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package intercalacep;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,14 +22,22 @@ public class IntercalaCEP {
         String arquivo_origem = "C:\\Users\\Lelê\\Documents\\cep.dat";
         String caminho_saida = "C:\\Users\\Lelê\\Documents\\arquivo";        
         
-        separaArquivos(arquivo_origem, caminho_saida, qtd_arquivos);
+        try 
+        {
+            //separaArquivos(arquivo_origem, caminho_saida, qtd_arquivos);
         
-        //juntaArquivos(caminho_saida, qtd_arquivos);        
+            juntaArquivos(caminho_saida, qtd_arquivos);
+        } 
+        catch (FileNotFoundException ex) 
+        {
+            Logger.getLogger(IntercalaCEP.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(IntercalaCEP.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private static void separaArquivos(String arquivo_origem, String arquivo_saida, int qtd_arquivos) 
-    {
-        
+    {        
         try
         {
             Endereco e = new Endereco();
@@ -49,8 +56,8 @@ public class IntercalaCEP {
             {
                 arquivo_escrita = new File(arquivo_saida + i + ".dat"); // está aqui para o nome do arquivo ser igual ao i;
                                 
-                while(i>2)
-                //while(aux_gravar_registros <= registros_a_salvar)                
+                //while(i>2)
+                while(aux_gravar_registros <= registros_a_salvar)                
                 {
                     e.leEndereco(f);                                        
                     bw = new BufferedWriter(new FileWriter(arquivo_escrita, true));
@@ -111,8 +118,73 @@ public class IntercalaCEP {
         }
     }        
 
-    private static void juntaArquivos(String caminho_saida, int qtd_arquivos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+    private static void juntaArquivos(String caminho_arquivos, int qtd_arquivos) throws FileNotFoundException, IOException 
+    {
+        Endereco e1 = new Endereco();
+        Endereco e2 = new Endereco();
+        
+        File arquivo_saida;  
+        BufferedWriter bw;
+        
+        int i=1;       
+       
+        
+        while(i<(qtd_arquivos-1))
+        {            
+            RandomAccessFile f1 = new RandomAccessFile (caminho_arquivos+i+".dat", "r");
+            RandomAccessFile f2 = new RandomAccessFile (caminho_arquivos+(i+1)+".dat", "r");
+            f1.seek(0);
+            f2.seek(0);
+            
+            e1.leEndereco(f1);
+            e2.leEndereco(f2);
+            
+            arquivo_saida = new File(caminho_arquivos + (qtd_arquivos+1) + ".dat");
+            bw = new BufferedWriter(new FileWriter(arquivo_saida, true));
+            
+            int j1=0, j2=0; //zerar sempre para a contagem do tamaho dos arquivos
+            
+            while(j1<=f1.length() && j2<=f2.length())
+            {                 
+                if(e1.getCep().compareTo(e2.getCep()) < 0) //e1 menor que e2
+                {
+                    bw.write(e1.getEnderoCompleto());
+                    e1.leEndereco(f1);
+                    j1 += 300;
+                }
+                else
+                {
+                   bw.write(e2.getEnderoCompleto());
+                   e2.leEndereco(f2);
+                   j2 += 300;
+                }
+                
+                bw.close();            
+            }
+            
+            if(j1<f1.length())
+            {
+                while(j1<=f1.length())
+                {                    
+                    bw.write(e1.getEnderoCompleto());
+                    e1.leEndereco(f1);
+                    j1 += 300;
+                }
+                
+            }
+            
+            if(j2<f2.length())
+            {
+               while(j2<=f2.length())
+               {
+                    bw.write(e2.getEnderoCompleto());
+                    e2.leEndereco(f2);
+                    j2 += 300; 
+               } 
+            }            
+            
+            qtd_arquivos++;
+            i += 2;
+        }
+    }    
 }
