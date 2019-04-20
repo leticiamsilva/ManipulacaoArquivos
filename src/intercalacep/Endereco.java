@@ -52,6 +52,10 @@ public class Endereco
     }
  
  
+    public String getEnderoCompleto()
+    {
+        return this.logradouro + this.bairro + this.cidade + this.estado + this.sigla + this.cep;
+    }
     public void escreveEndereco(DataOutput dout) throws IOException
     {       
         // Definie a forma como caracteres especias estão codificados.
@@ -113,8 +117,5 @@ public class Endereco
         this.cep = cep;
     }
     
-    public String getEnderoCompleto()
-    {
-        return this.logradouro + this.bairro + this.cidade + this.estado + this.sigla + this.cep;
-    }
+    
 }
