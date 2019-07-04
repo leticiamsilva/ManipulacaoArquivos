@@ -1,4 +1,4 @@
-package questao2final;
+﻿package questao2final;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import java.io.BufferedReader;
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- *
  * @author Lelê
  */
 public class Questao2FINAL {
