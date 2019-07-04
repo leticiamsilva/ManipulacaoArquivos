@@ -16,6 +16,7 @@ struct _Aluno
     char opcaoQuadro;
 };
 
+//padrao = %c%s%s%s%c%s%c
 
 int main()
 {
@@ -24,18 +25,16 @@ int main()
  cout << "Digite o CPF: ";
  cin >> cpf_buscado;
  
- File f* = fopen("alumos.csv","r");
+ File f* = fopen("alunos.csv","r");
  int qtd_atributos =0;
- int qt;
- char ch;
-char * pch;
- qt = fread(&e,sizeof(Aluno),1,f);
  
+ char * pch;
+ char linha[60];
  
- while (fgetc(f)) != EOF)
+pch = fgets(linha, 100, f);
+ 
+ while (pch != EOF)
  {
-	linha = getc(f);
-
 	//A função strtoc recebe o endereço dos dados e os caracteres de separação
 	id_inscricao = strtok(linha, ","); 
 	curso =  strtok(NULL, ", ");
@@ -46,6 +45,8 @@ char * pch;
 		cout << "Curso:  %s", curso;
 		break;
 	}
+
+	pch = fgets(linha, 100, f);
 }
 
   return 0;
