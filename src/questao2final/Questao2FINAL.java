@@ -1,9 +1,7 @@
 ﻿package questao2final;
 
-import au.com.bytecode.opencsv.CSVWriter;
-import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -11,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
+ *
  * @author Lelê
  */
 public class Questao2FINAL {
@@ -23,17 +22,23 @@ public class Questao2FINAL {
         ArrayList<Beneficiario> mes;
 
         mes = ordenarArquivo(f1);
-
-        //-----------------Aqui salva no arquivo
-        CSVWriter csv;
-        csv = new CSVWriter(new FileWriter(arquivoEscrita));
-
-        for (Beneficiario b : mes) {
-            csv.writeNext(b.escreveBeneficiarioLinha());
+        
+        BufferedWriter br = new BufferedWriter(new FileWriter(arquivoEscrita));
+        StringBuilder sb = new StringBuilder();
+        
+        for(Beneficiario b: mes)
+        {
+            for(String s : b.escreveBeneficiarioLinha())
+            {
+                sb.append(s);
+                sb.append(";");
+            }
+            sb.append("\n");  
         }
-        csv.close();
+        br.write(sb.toString());
+        br.close();
 
-         System.out.println(mes.get(9).escreveBeneficiarioLinha()[5]);
+         System.out.println(mes.get(9).escreveBeneficiarioLinha()[3]);
     }
 
     private static ArrayList<Beneficiario> ordenarArquivo(File arquivo) throws IOException //utiliza o getFilePointer
